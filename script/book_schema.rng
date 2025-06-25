@@ -58,7 +58,7 @@
   </define>
   <define name="dollars">
     <data type="string">
-      <param name="pattern">$\d{1,}\.\d{2}</param>
+      <param name="pattern">$(\d{0,},\d{3}|\d{1,}).\d{2}</param>
     </data>
   </define>
   <define name="empty">
