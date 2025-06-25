@@ -1,5 +1,5 @@
-﻿<grammar xmlns="http://relaxng.org/ns/structure/1.0">
-
+﻿<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <element name="reviews">
       <zeroOrMore>
@@ -7,31 +7,31 @@
       </zeroOrMore>
     </element>
   </start>
-
   <define name="review">
     <element name="review">
       <ref name="book"/>
       <ref name="sentiments"/>
     </element>
   </define>
-
   <define name="book">
     <element name="book">
       <attribute name="asin">
-        <text/>
+        <ref name="non_empty"/>
       </attribute>
       <attribute name="title">
-        <text/>
+        <ref name="non_empty"/>
       </attribute>
       <attribute name="genre">
-        <text/>
+        <ref name="non_empty"/>
       </attribute>
       <attribute name="price">
-        <text/>
+        <choice>
+          <ref name="empty"/>
+          <ref name="dollars"/>
+        </choice>
       </attribute>
     </element>
   </define>
-
   <define name="sentiments">
     <element name="sentiments">
       <zeroOrMore>
@@ -39,7 +39,6 @@
       </zeroOrMore>
     </element>
   </define>
-
   <define name="phrase">
     <element name="phrase">
       <attribute name="polarity">
@@ -52,5 +51,19 @@
       <text/>
     </element>
   </define>
-
+  <define name="non_empty">
+    <data type="string">
+      <param name="minLength">1</param>
+    </data>
+  </define>
+  <define name="dollars">
+    <data type="string">
+      <param name="pattern">$\d{1,}\.\d{2}</param>
+    </data>
+  </define>
+  <define name="empty">
+    <data type="string">
+      <param name="maxLength">0</param>
+    </data>
+  </define>
 </grammar>
