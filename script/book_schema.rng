@@ -1,0 +1,56 @@
+﻿<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+
+  <start>
+    <element name="reviews">
+      <zeroOrMore>
+        <ref name="review"/>
+      </zeroOrMore>
+    </element>
+  </start>
+
+  <define name="review">
+    <element name="review">
+      <ref name="book"/>
+      <ref name="sentiments"/>
+    </element>
+  </define>
+
+  <define name="book">
+    <element name="book">
+      <attribute name="asin">
+        <text/>
+      </attribute>
+      <attribute name="title">
+        <text/>
+      </attribute>
+      <attribute name="genre">
+        <text/>
+      </attribute>
+      <attribute name="price">
+        <text/>
+      </attribute>
+    </element>
+  </define>
+
+  <define name="sentiments">
+    <element name="sentiments">
+      <zeroOrMore>
+        <ref name="phrase"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="phrase">
+    <element name="phrase">
+      <attribute name="polarity">
+        <choice>
+          <value>negative</value>
+          <value>positive</value>
+          <value>neutral</value>
+        </choice>
+      </attribute>
+      <text/>
+    </element>
+  </define>
+
+</grammar>
