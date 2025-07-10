@@ -19,7 +19,7 @@ st.title("Book Reviewscope - Amazon Reviews")
 # search for book
 title = st.text_input("Search for book title", placeholder="Lord of the Rings")
 search_params = (title,)
-books = pd.read_sql(
+books = pd.read_sql_query(
     f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin", conn
 )
 st.dataframe(books)
