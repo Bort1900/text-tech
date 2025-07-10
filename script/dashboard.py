@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
-DB_PATH = "./database/book_reviews.db"  # oder .sqlite, je nach Name
+DB_PATH = r'script\database\book_reviews.db'
 conn = sqlite3.connect(DB_PATH)
 
 
