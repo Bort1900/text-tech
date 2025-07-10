@@ -2,9 +2,22 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
-DB_PATH = r'script\database\book_reviews.db'
-conn = sqlite3.connect(DB_PATH)
 
+def book_search():
+    search_params = (title,)
+    books = pd.read_sql_query(
+        f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
+        conn,
+    )
+    st.dataframe(books)
+
+
+conn = sqlite3.connect("script/database/book_reviews.db")
+
+
+cursor = conn.cursor()
+cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+print(cursor.fetchall())
 
 # @st.cache_data
 # def load_data():
@@ -17,12 +30,10 @@ conn = sqlite3.connect(DB_PATH)
 st.title("Book Reviewscope - Amazon Reviews")
 
 # search for book
-title = st.text_input("Search for book title", placeholder="Lord of the Rings")
-search_params = (title,)
-books = pd.read_sql_query(
-    f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin", conn
+title = st.text_input(
+    "Search for book title", placeholder="Lord of the Rings", on_change=book_search
 )
-st.dataframe(books)
+
 
 # # Kategorie-Filter
 # kategorien = df["kategorie"].dropna().unique()
