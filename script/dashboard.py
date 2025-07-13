@@ -1,9 +1,12 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+from functools import partial
 
 
-def book_search():
+def book_search(param):
+    print("hey")
+    print(param)
     search_params = (title,)
     books = pd.read_sql_query(
         f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
@@ -31,7 +34,10 @@ st.title("Book Reviewscope - Amazon Reviews")
 
 # search for book
 title = st.text_input(
-    "Search for book title", placeholder="Lord of the Rings", on_change=book_search
+    "Search for book title",
+    placeholder="Lord of the Rings",
+    value="ses",
+    on_change=book_search,
 )
 
 
