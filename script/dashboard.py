@@ -16,13 +16,13 @@ from functools import partial
 #     st.dataframe(books)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, "database/book_reviews.db")
-print(db_path)
-conn = sqlite3.connect(db_path)
+st.write(db_path)
+# conn = sqlite3.connect(db_path)
 
 
-cursor = conn.cursor()
-cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-print(cursor.fetchall())
+# cursor = conn.cursor()
+# cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+# print(cursor.fetchall())
 
 # @st.cache_data
 # def load_data():
