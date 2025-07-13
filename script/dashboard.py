@@ -15,7 +15,7 @@ from functools import partial
 #     st.dataframe(books)
 
 
-conn = sqlite3.connect("script/database/book_reviews.db")
+conn = sqlite3.connect("../database/book_reviews.db")
 
 
 cursor = conn.cursor()
