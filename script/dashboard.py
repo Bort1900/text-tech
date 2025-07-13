@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+import os
 from functools import partial
 
 
@@ -14,8 +15,8 @@ from functools import partial
 #     )
 #     st.dataframe(books)
 
-
-conn = sqlite3.connect("../database/book_reviews.db")
+print(os.path.dirname(os.path.abspath(__file__)))
+conn = sqlite3.connect("script/database/book_reviews.db")
 
 
 cursor = conn.cursor()
