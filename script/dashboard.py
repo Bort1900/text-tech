@@ -4,15 +4,15 @@ import sqlite3
 from functools import partial
 
 
-def book_search(param):
-    print("hey")
-    print(param)
-    search_params = (title,)
-    books = pd.read_sql_query(
-        f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
-        conn,
-    )
-    st.dataframe(books)
+# def book_search(param):
+#     print("hey")
+#     print(param)
+#     search_params = (title,)
+#     books = pd.read_sql_query(
+#         f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
+#         conn,
+#     )
+#     st.dataframe(books)
 
 
 conn = sqlite3.connect("script/database/book_reviews.db")
@@ -33,12 +33,12 @@ print(cursor.fetchall())
 st.title("Book Reviewscope - Amazon Reviews")
 
 # search for book
-title = st.text_input(
-    "Search for book title",
-    placeholder="Lord of the Rings",
-    value="ses",
-    on_change=book_search,
-)
+# title = st.text_input(
+#     "Search for book title",
+#     placeholder="Lord of the Rings",
+#     value="ses",
+#     on_change=book_search,
+# )
 
 
 # # Kategorie-Filter
