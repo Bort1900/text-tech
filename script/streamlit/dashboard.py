@@ -3,6 +3,33 @@ import pandas as pd
 import sqlite3
 import os
 from functools import partial
+import streamlit as st
+import psycopg2
+import pandas as pd
+
+st.title("Book Reviewscope - Amazon Reviews")
+
+@st.cache_data
+def get_data():
+    '''
+        connect to database and get data
+    '''
+    conn = psycopg2.connect(
+        host=st.secrets["DB_HOST"],
+        port=st.secrets["DB_PORT"],
+        dbname=st.secrets["DB_NAME"],
+        user=st.secrets["DB_USER"],
+        password=st.secrets["DB_PASSWORD"]
+    )
+
+    query = "SELECT * FROM books;" 
+    df = pd.read_sql_query(query, conn)
+
+    conn.close()
+    return df
+
+df = get_data()
+st.dataframe(df)
 
 
 # def book_search(param):
@@ -14,9 +41,6 @@ from functools import partial
 #         conn,
 #     )
 #     st.dataframe(books)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-db_path = os.path.join(BASE_DIR, "database/book_reviews.db")
-st.write(db_path)
 # conn = sqlite3.connect(db_path)
 
 
@@ -32,7 +56,6 @@ st.write(db_path)
 
 # df = load_data()
 
-st.title("Book Reviewscope - Amazon Reviews")
 
 # search for book
 # title = st.text_input(
