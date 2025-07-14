@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS books (
     asin TEXT PRIMARY KEY,
     title TEXT,
-    price REAL,
+    price TEXT,
     genre TEXT
 );
 
