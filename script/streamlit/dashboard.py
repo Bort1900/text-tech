@@ -49,7 +49,7 @@ def book_search(key):
 title = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
-    key ="book_search"
+    key ="book_search",
     value="Lord",
     on_change=partial(book_search,"book_search")
 )
