@@ -36,7 +36,7 @@ def book_search(key):
     """
     title = st.session_state[key]
     query = f"SELECT asin, title FROM books WHERE title LIKE %s ORDER BY asin"
-    params = ("%title%",)
+    params = (f"%{title}%",)
     books = get_data(query=query,search_params=params)
     st.dataframe(books)
 
