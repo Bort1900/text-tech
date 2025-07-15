@@ -29,18 +29,29 @@ def get_data(query="SELECT * FROM books;"):
 df = get_data()
 st.dataframe(df)
 
+st.subheader("Book Search")
 
-# def book_search(param):
-#     print("hey")
-#     print(param)
-#     search_params = (title,)
-#     books = pd.read_sql_query(
-#         f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
-#         conn,
-#     )
-#     st.dataframe(books)
-# conn = sqlite3.connect(db_path)
 
+def book_search(param):
+    # print("hey")
+    # print(param)
+    # search_params = (title,)
+    # books = pd.read_sql_query(
+    #     query= f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
+    #     conn,
+    #     search_params,
+    # )
+    # st.dataframe(books)
+    st.write(param)
+
+
+# search for book in database to get asin
+title = st.text_input(
+    "Search for book title",
+    placeholder="Lord of the Rings",
+    value="Lord",
+    on_change=book_search,
+)
 
 # cursor = conn.cursor()
 # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -53,15 +64,6 @@ st.dataframe(df)
 
 
 # df = load_data()
-
-
-# search for book
-# title = st.text_input(
-#     "Search for book title",
-#     placeholder="Lord of the Rings",
-#     value="ses",
-#     on_change=book_search,
-# )
 
 
 # # Kategorie-Filter
