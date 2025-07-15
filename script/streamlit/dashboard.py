@@ -30,6 +30,7 @@ def get_data(query="SELECT * FROM books;", search_params=()):
 st.subheader("Book Search")
 
 
+# TODO Author search, full text search
 def book_search(key):
     """
     returns the results for books as specified in the object value of the key object
@@ -37,8 +38,8 @@ def book_search(key):
     title = st.session_state[key]
     query = f"SELECT asin, title FROM books WHERE title LIKE %s ORDER BY asin"
     params = (f"%{title}%",)
-    books = get_data(query=query,search_params=params)
-    st.dataframe(books)
+    books = get_data(query=query, search_params=params)
+    search_results.dataframe(books)
 
 
 # search for book in database to get asin
@@ -49,7 +50,7 @@ title = st.text_input(
     value="Lord",
     on_change=partial(book_search, "book_search"),
 )
-
+search_results = st.empty()
 # cursor = conn.cursor()
 # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 # print(cursor.fetchall())
