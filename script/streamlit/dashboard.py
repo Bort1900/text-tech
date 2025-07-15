@@ -24,25 +24,17 @@ def get_data(query="SELECT * FROM books;"):
 
     conn.close()
     return df
-
-
-df = get_data()
-st.dataframe(df)
-
 st.subheader("Book Search")
 
 
 def book_search(key):
-    # print("hey")
-    # print(param)
-    # search_params = (title,)
-    # books = pd.read_sql_query(
-    #     query= f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin",
-    #     conn,
-    #     search_params,
-    # )
-    # st.dataframe(books)
-    st.write("param"+ st.session_state[key])
+    '''
+        returns the results for books as specified in the object value of the key object
+    '''
+    title = st.session_state["key"]
+    query= f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin"
+    books = get_data(query=query)
+    st.dataframe(books)
 
 
 # search for book in database to get asin
