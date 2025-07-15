@@ -27,6 +27,7 @@ def get_data(query="SELECT * FROM books;", search_params=()):
     return df
 
 
+# Searching for books in the database to get asin
 st.subheader("Book Search")
 
 
@@ -42,7 +43,6 @@ def book_search(key):
     search_results.dataframe(books)
 
 
-# search for book in database to get asin
 title = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
@@ -51,18 +51,9 @@ title = st.text_input(
     on_change=partial(book_search, "book_search"),
 )
 search_results = st.empty()
-# cursor = conn.cursor()
-# cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-# print(cursor.fetchall())
 
-# @st.cache_data
-# def load_data():
-#     df = pd.read_sql("SELECT * FROM books", conn)
-#     return df
-
-
-# df = load_data()
-
+query = "SELECT B.title, S.phrase, S.polarity FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id ORDER BY B.asin"
+filtered = get_data(query=query)
 
 # # Kategorie-Filter
 # kategorien = df["kategorie"].dropna().unique()
