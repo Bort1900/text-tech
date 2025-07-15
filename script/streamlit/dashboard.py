@@ -31,7 +31,7 @@ def book_search(key):
     '''
         returns the results for books as specified in the object value of the key object
     '''
-    title = st.session_state["key"]
+    title = st.session_state[key]
     query= f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin"
     books = get_data(query=query)
     st.dataframe(books)
