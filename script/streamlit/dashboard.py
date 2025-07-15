@@ -41,6 +41,7 @@ def book_search(key):
     params = (f"%{title}%",)
     books = get_data(query=query, search_params=params)
     search_results.dataframe(books)
+    st.write("done " + title)
 
 
 title = st.text_input(
