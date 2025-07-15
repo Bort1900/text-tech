@@ -42,7 +42,7 @@ def book_search(param):
     #     search_params,
     # )
     # st.dataframe(books)
-    st.write(param)
+    st.write("param"+ param)
 
 
 # search for book in database to get asin
