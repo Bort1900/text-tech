@@ -41,7 +41,6 @@ def book_search(key):
     params = (f"%{title}%",)
     books = get_data(query=query, search_params=params)
     search_results.dataframe(books)
-    st.write("done " + title)
 
 
 title = st.text_input(
@@ -56,7 +55,8 @@ search_results = st.empty()
 st.subheader("Filter results")
 query = "SELECT B.title, S.phrase, S.polarity FROM books as B, reviews as R, sentiments as S WHERE S.polarity = 'negative' AND B.asin = R.asin AND R.id = S.review_id ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=query)
-st.dataframe(filtered)
+filtered_results = st.empty
+filtered_results.dataframe(filtered)
 # # Kategorie-Filter
 # kategorien = df["kategorie"].dropna().unique()
 # kategorie_filter = st.multiselect("Kategorie auswählen", kategorien, default=kategorien)
