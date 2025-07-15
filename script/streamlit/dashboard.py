@@ -9,9 +9,10 @@ st.title("Book Reviewscope - Amazon Reviews")
 
 
 @st.cache_data
-def get_data(query="SELECT * FROM books;"):
+def get_data(query="SELECT * FROM books;", search_params=()):
     """
     connect to database and get data
+    search_params should be used as a tuple to avoid SQL Injection when user input is incorporated in a query
     """
     conn = psycopg2.connect(
         host=st.secrets["DB_HOST"],
@@ -20,19 +21,22 @@ def get_data(query="SELECT * FROM books;"):
         user=st.secrets["DB_USER"],
         password=st.secrets["DB_PASSWORD"],
     )
-    df = pd.read_sql_query(query, conn)
+    df = pd.read_sql_query(query, conn, params=search_params)
 
     conn.close()
     return df
+
+
 st.subheader("Book Search")
 
 
 def book_search(key):
-    '''
-        returns the results for books as specified in the object value of the key object
-    '''
+    """
+    returns the results for books as specified in the object value of the key object
+    """
     title = st.session_state[key]
-    query= f"SELECT asin, title FROM books WHERE title LIKE '%{title}%' ORDER BY asin"
+    query = f"SELECT asin, title FROM books WHERE title LIKE %s ORDER BY asin"
+    params = ("%title%",)
     books = get_data(query=query)
     st.dataframe(books)
 
@@ -41,9 +45,9 @@ def book_search(key):
 title = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
-    key ="book_search",
+    key="book_search",
     value="Lord",
-    on_change=partial(book_search,"book_search")
+    on_change=partial(book_search, "book_search"),
 )
 
 # cursor = conn.cursor()
