@@ -32,7 +32,7 @@ st.dataframe(df)
 st.subheader("Book Search")
 
 
-def book_search(param):
+def book_search(key):
     # print("hey")
     # print(param)
     # search_params = (title,)
@@ -42,15 +42,16 @@ def book_search(param):
     #     search_params,
     # )
     # st.dataframe(books)
-    st.write("param"+ param)
+    st.write("param"+ st.session_state[key])
 
 
 # search for book in database to get asin
 title = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
+    key ="book_search"
     value="Lord",
-    on_change=book_search,
+    on_change=partial(book_search,"book_search")
 )
 
 # cursor = conn.cursor()
