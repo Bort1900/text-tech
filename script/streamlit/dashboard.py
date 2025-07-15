@@ -52,7 +52,7 @@ title = st.text_input(
 )
 search_results = st.empty()
 
-query = "SELECT B.title, S.phrase, S.polarity FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id LIMIT 1000 ORDER BY B.asin"
+query = "SELECT B.title, S.phrase, S.polarity FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=query)
 
 # # Kategorie-Filter
