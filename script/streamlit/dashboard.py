@@ -47,7 +47,7 @@ def run_query():
     """
     query_conditions = ""
     params = []
-
+    st.write("lets go")
     if asin_choice:
         st.write("filter by asin: ", asin_choice)
         query_conditions += "AND B.asin=%s "
