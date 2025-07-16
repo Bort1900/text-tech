@@ -75,9 +75,9 @@ st.subheader("Book Search")
 title = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
-    key=ELEMENT_KEYS["book_search"],
+    key="book_search",
     value="Lord",
-    on_change=partial(book_search, ELEMENT_KEYS["book_search"]),
+    on_change=partial(book_search, "book_search"),
 )
 search_results = st.container()
 # # Kategorie-Filter
