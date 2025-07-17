@@ -29,7 +29,7 @@ st.title("Book Reviewscope - Amazon Reviews")
 # Filter database with various parameters
 st.subheader("Filter results")
 # Filters
-asin_choice = st.text_input("asin", key=ELEMENT_KEYS["asin"])
+asin_choice = st.text_input("asin")
 
 filtered_results = st.container()
 # Searching for books in the database to get asin
