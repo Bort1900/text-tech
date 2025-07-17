@@ -49,7 +49,7 @@ st.subheader("Filter results")
 # Filters
 # TODO text searches
 asin_choice = st.text_input("asin")
-keyword_choice = st.st_tags(
+keyword_choice = st_tags(
     label="Keywords:",
     text="Press enter to add more",
 )
