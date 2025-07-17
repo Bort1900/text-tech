@@ -6,6 +6,7 @@ from functools import partial
 import psycopg2
 
 
+@st.cache_data
 def get_data(query="SELECT * FROM books;", search_params=()):
     """
     connect to database and get data
@@ -41,6 +42,7 @@ price_choice = st.slider(
     "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
 )
 genre_choice = st.multiselect("Genres", get_genres())
+
 
 filtered_results = st.container()
 # Searching for books in the database to get asin
