@@ -5,7 +5,10 @@ import os
 from functools import partial
 import psycopg2
 
-
+ELEMENT_KEYS={
+    "asin":"asin",
+    "book_search":"book"
+}
 st.title("Book Reviewscope - Amazon Reviews")
 
 
@@ -47,10 +50,11 @@ def run_query():
     """
     query_conditions = ""
     params = []
-    if asin_choice:
-        st.write("filtering by asin: ", asin_choice)
+    asin = st.session_state[ELEMENT_KEYS["asin"]]
+    if asin:
+        st.write("filtering by asin: ", asin)
         query_conditions += "AND B.asin=%s "
-        params.append(asin_choice)
+        params.append(asin)
 
     complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
     st.write(complete_query, params)
@@ -63,7 +67,7 @@ def run_query():
 st.subheader("Filter results")
 
 # Filters
-asin_choice = st.text_input("asin", on_change=run_query)
+asin_choice = st.text_input("asin", key=ELEMENT_KEYS["asin"] on_change=run_query)
 
 
 filtered_results = st.container()
@@ -75,9 +79,9 @@ st.subheader("Book Search")
 title = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
-    key="book_search",
+    key=ELEMENT_KEYS["book_search"],
     value="Lord",
-    on_change=partial(book_search, "book_search"),
+    on_change=partial(book_search, ELEMENT_KEYS["book_search"]),
 )
 search_results = st.container()
 # # Kategorie-Filter
