@@ -50,11 +50,11 @@ st.subheader("Book Search")
 
 title_search = st.text_input(
     "Search for book title",
-    placeholder="Lord of the Rings",
+    placeholder="Hamlet",
 )
 author_search = st.text_input(
     "Search for author",
-    placeholder="Tolkien",
+    placeholder="Shakespeare",
 )
 search_results = st.container()
 
@@ -76,9 +76,9 @@ if price_choice:
 
 if genre_choice:
     query_conditions += "AND B.genre IN ("
-    for genre in genre_choice:
-        if genre_choice[0] != genre:
-            query_conditions + ", "
+    for i in range(len(genre_choice)):
+        if i > 0:
+            query_conditions += ", "
         query_conditions += "%s"
     query_conditions += ") "
     params.extend(genre_choice)
