@@ -7,6 +7,12 @@ import psycopg2
 
 
 @st.cache_data
+def get_genres():
+    query = "SELECT genre FROM books GROUP BY genre"
+    genres = get_data(query=query)
+    return genres
+
+
 def get_data(query="SELECT * FROM books;", search_params=()):
     """
     connect to database and get data
@@ -30,6 +36,7 @@ st.title("Book Reviewscope - Amazon Reviews")
 st.subheader("Filter results")
 # Filters
 asin_choice = st.text_input("asin")
+rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
 
 filtered_results = st.container()
 # Searching for books in the database to get asin
@@ -48,7 +55,9 @@ params = []
 if asin_choice:
     query_conditions += "AND B.asin=%s "
     params.append(asin_choice)
-
+if rating_choice:
+    query_conditions += "AND R.rating BETWEEN %s AND %s"
+    params.extend(list(rating_choice))
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
