@@ -50,6 +50,10 @@ title_search = st.text_input(
     "Search for book title",
     placeholder="Lord of the Rings",
 )
+author_search = st.text_input(
+    "Search for author",
+    placeholder="Tolkien",
+)
 search_results = st.container()
 
 # collect all the filters and create a query which is then applied to the dataframe
@@ -74,7 +78,7 @@ if genre_choice:
         if genre_choice[0] != genre:
             query_conditions + ", "
         query_conditions += "%s"
-    query_conditions+=") "
+    query_conditions += ") "
     params.extend(genre_choice)
 
 
@@ -84,15 +88,29 @@ with filtered_results:
     st.write(complete_query, params)
     st.dataframe(filtered.style.format({"price": "${:,.2f}"}))
 
-# TODO Author search, full text search, minimizable
+# TODO full text search
 # search for books and return the asin
+search_needed = False
+search_query_conditions = ""
+search_params = []
 if title_search:
-    query = f"SELECT asin, title FROM books WHERE title LIKE %s ORDER BY asin"
-    params = (f"%{title_search}%",)
-    books = get_data(query=query, search_params=params)
+    search_needed = True
+    search_query_conditions += "AND title LIKE %s "
+    search_params.append(
+        f"%{title_search}%",
+    )
+
+if author_search:
+    search_needed = True
+    search_query_conditions += "AND author LIKE %s "
+    search_params = (f"%{author_search}%",)
+
+search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_conditions}ORDER BY asin"
+
+if search_needed:
+    books = get_data(query=search_query, search_params=search_params)
     with search_results:
         st.dataframe(books)
-
 
 # # Kategorie-Filter
 # kategorien = df["kategorie"].dropna().unique()
