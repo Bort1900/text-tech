@@ -100,8 +100,8 @@ if keyword_choice:
     for i in range(len(keyword_choice)):
         if i > 0:
             query_conditions += "|"
-        query_conditions += "'%s"
-    query_conditions += " ::tsquery "
+        query_conditions += '"%s'
+    query_conditions += '"::tsquery '
 
 
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
