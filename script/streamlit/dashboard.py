@@ -37,6 +37,9 @@ st.subheader("Filter results")
 # Filters
 asin_choice = st.text_input("asin")
 rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
+price_choice = st.slider(
+    "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
+)
 
 filtered_results = st.container()
 # Searching for books in the database to get asin
@@ -55,14 +58,21 @@ params = []
 if asin_choice:
     query_conditions += "AND B.asin=%s "
     params.append(asin_choice)
+
 if rating_choice:
     query_conditions += "AND R.rating BETWEEN %s AND %s "
     params.extend(list(rating_choice))
+
+if price_choice:
+    st.write(price_choice)
+    query_conditions += "AND B.price BETWEEN %s AND %s "
+    params.extend(list(price_choice))
+
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
     st.write(complete_query, params)
-    st.dataframe(filtered)
+    st.dataframe(filtered.style.format({"price": "${:,.2f}"}))
 
 # TODO Author search, full text search, minimizable
 # search for books and return the asin
