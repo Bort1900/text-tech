@@ -122,7 +122,7 @@ complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.pol
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
     st.write(complete_query, params)
-    st.dataframe(filtered.style.format({"price": "${:,.2f}"}))
+    st.dataframe(filtered.style.format({"price": "${:,.2f}", "rating": "{:,.0f}"}))
 
 # TODO full text search
 # search for books and return the asin
