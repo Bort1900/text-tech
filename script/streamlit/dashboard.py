@@ -47,13 +47,13 @@ def run_query():
     """
     query_conditions = ""
     params = []
-    st.write("lets go")
     if asin_choice:
-        st.write("filter by asin: ", asin_choice)
+        st.write("filtering by asin: ", asin_choice)
         query_conditions += "AND B.asin=%s "
         params.append(asin_choice)
 
     complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
+    st.write(complete_query, params)
     filtered = get_data(query=complete_query, search_params=params)
     with filtered_results:
         st.dataframe(filtered)
