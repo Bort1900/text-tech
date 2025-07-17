@@ -96,13 +96,13 @@ if genre_choice:
     params.extend(genre_choice)
 
 if keyword_choice:
-    query_conditions += "AND S.phrase::tsvector @@ "
-    for i in range(len(keyword_choice)):
+    query_conditions += "AND S.phrase::tsvector @@ %s::tsquery "
+    keywords = ""
+    for i, word in enumerate(keyword_choice):
         if i > 0:
-            query_conditions += "|"
-        query_conditions += "%s"
-    query_conditions += "::tsquery "
-    params.extend(keyword_choice)
+            keywords += "|"
+        keywords += word
+    params.append(keywords)
 
 
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
