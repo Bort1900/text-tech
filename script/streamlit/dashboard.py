@@ -6,13 +6,6 @@ from functools import partial
 import psycopg2
 
 
-@st.cache_data
-def get_genres():
-    query = "SELECT genre FROM books GROUP BY genre"
-    genres = get_data(query=query)
-    return genres
-
-
 def get_data(query="SELECT * FROM books;", search_params=()):
     """
     connect to database and get data
@@ -31,6 +24,13 @@ def get_data(query="SELECT * FROM books;", search_params=()):
     return df
 
 
+@st.cache_data
+def get_genres():
+    query = "SELECT genre FROM books GROUP BY genre"
+    genres = get_data(query=query)
+    return list(genres["genre"])
+
+
 st.title("Book Reviewscope - Amazon Reviews")
 # Filter database with various parameters
 st.subheader("Filter results")
@@ -40,6 +40,7 @@ rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
 price_choice = st.slider(
     "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
 )
+genre_choice = st.multiselect("Genres", get_genres())
 
 filtered_results = st.container()
 # Searching for books in the database to get asin
@@ -64,9 +65,18 @@ if rating_choice:
     params.extend(list(rating_choice))
 
 if price_choice:
-    st.write(price_choice)
     query_conditions += "AND B.price BETWEEN %s AND %s "
     params.extend(list(price_choice))
+
+if genre_choice:
+    query_conditions += "AND B.genre IN ("
+    for genre in genre_choice:
+        if genre_choice[0] != genre:
+            query_conditions + ", "
+        query_conditions += "%s"
+    query_conditions+=") "
+    params.extend(genre_choice)
+
 
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
