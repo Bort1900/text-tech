@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
-import sqlite3
-import os
 from functools import partial
 import psycopg2
+from streamlit_tags import st_tags
 
 
 @st.cache_data
@@ -32,11 +31,30 @@ def get_genres():
     return list(genres["genre"])
 
 
+def get_disjunction_query(column, element):
+    """
+    returns query for a disjunction
+    """
+    conditions += f"AND {column} IN ("
+    for i in range(len(element)):
+        if i > 0:
+            conditions += "%s"
+    conditions += ") "
+    return conditions
+
+
 st.title("Book Reviewscope - Amazon Reviews")
 # Filter database with various parameters
 st.subheader("Filter results")
 # Filters
+# TODO text searches
 asin_choice = st.text_input("asin")
+keyword_choice = st_tags(
+    label="Keywords:",
+    text="Press enter to add more",
+)
+st.write(keyword_choice)
+
 rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
 price_choice = st.slider(
     "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
@@ -75,13 +93,16 @@ if price_choice:
     params.extend(list(price_choice))
 
 if genre_choice:
-    query_conditions += "AND B.genre IN ("
-    for i in range(len(genre_choice)):
-        if i > 0:
-            query_conditions += ", "
-        query_conditions += "%s"
-    query_conditions += ") "
+    query_conditions += get_disjunction_query("B.genre", genre_choice)
     params.extend(genre_choice)
+
+if keyword_choice:
+    query_conditions += "AND S.phrase::tsvector @@ "
+    for i in range(keyword_choice):
+        if i > 0:
+            query_conditions += "|"
+        query_conditions += "'%s"
+    query_conditions += " ::tsquery "
 
 
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
