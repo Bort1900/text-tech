@@ -53,7 +53,6 @@ keyword_choice = st_tags(
     label="Keywords:",
     text="Press enter to add more",
 )
-st.write(keyword_choice)
 
 rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
 price_choice = st.slider(
@@ -98,7 +97,7 @@ if genre_choice:
 
 if keyword_choice:
     query_conditions += "AND S.phrase::tsvector @@ "
-    for i in range(keyword_choice):
+    for i in range(len(keyword_choice)):
         if i > 0:
             query_conditions += "|"
         query_conditions += "'%s"
