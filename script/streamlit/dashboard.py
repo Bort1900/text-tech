@@ -53,7 +53,11 @@ keyword_choice = st_tags(
     label="Keywords:",
     text="Press enter to add more",
 )
-
+col1, col2 = st.columns([1, 4])
+with col1:
+    toggle_conjunctive = st.toggle("conjuntive", label_visibility="hidden")
+with col2:
+    st.markdown("Conjunctive" if toggle_conjunctive else "Disjunctive")
 rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
 sentiment_choice = st.segmented_control(
     "Review Polarity",
@@ -105,7 +109,7 @@ if keyword_choice:
     keywords = ""
     for i, word in enumerate(keyword_choice):
         if i > 0:
-            keywords += "|"
+            keywords += "&" if toggle_conjunctive else "|"
         keywords += word
     params.append(keywords)
 
