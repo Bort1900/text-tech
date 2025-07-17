@@ -55,6 +55,11 @@ keyword_choice = st_tags(
 )
 
 rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
+sentiment_choice = st.segmented_control(
+    "Review Polarity",
+    options=["negative", "neutral", "positive"],
+    selection_mode="multi",
+)
 price_choice = st.slider(
     "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
 )
@@ -103,6 +108,10 @@ if keyword_choice:
             keywords += "|"
         keywords += word
     params.append(keywords)
+
+if sentiment_choice:
+    query_conditions += get_disjunction_query("S.polarity", sentiment_choice)
+    params += sentiment_choice
 
 
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
