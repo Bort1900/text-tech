@@ -5,10 +5,7 @@ import os
 from functools import partial
 import psycopg2
 
-ELEMENT_KEYS={
-    "asin":"asin",
-    "book_search":"book"
-}
+ELEMENT_KEYS = {"asin": "asin", "book_search": "book"}
 st.title("Book Reviewscope - Amazon Reviews")
 
 
@@ -41,6 +38,7 @@ def book_search(key):
     params = (f"%{title}%",)
     books = get_data(query=query, search_params=params)
     with search_results:
+        st.write("searching for " + title)
         st.dataframe(books)
 
 
@@ -57,9 +55,9 @@ def run_query():
         params.append(asin)
 
     complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
-    st.write(complete_query, params)
     filtered = get_data(query=complete_query, search_params=params)
     with filtered_results:
+        st.write(complete_query, params)
         st.dataframe(filtered)
 
 
@@ -67,7 +65,7 @@ def run_query():
 st.subheader("Filter results")
 
 # Filters
-asin_choice = st.text_input("asin", key=ELEMENT_KEYS["asin"] on_change=run_query)
+asin_choice = st.text_input("asin", key=ELEMENT_KEYS["asin"], on_change=run_query)
 
 
 filtered_results = st.container()
