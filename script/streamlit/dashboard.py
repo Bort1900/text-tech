@@ -56,7 +56,7 @@ if asin_choice:
     query_conditions += "AND B.asin=%s "
     params.append(asin_choice)
 if rating_choice:
-    query_conditions += "AND R.rating BETWEEN %s AND %s"
+    query_conditions += "AND R.rating BETWEEN %s AND %s "
     params.extend(list(rating_choice))
 complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
