@@ -7,12 +7,14 @@
       </zeroOrMore>
     </element>
   </start>
+  <!-- Element representing an Amazon book review -->
   <define name="review">
     <element name="review">
       <ref name="book"/>
       <ref name="sentiments"/>
     </element>
   </define>
+  <!-- Element representing  a book with its Amazon metadata-->
   <define name="book">
     <element name="book">
       <attribute name="asin">
@@ -39,6 +41,7 @@
       </zeroOrMore>
     </element>
   </define>
+  <!-- Element consisting of a review sentence and its sentiment polarity  -->
   <define name="phrase">
     <element name="phrase">
       <attribute name="polarity">
@@ -51,16 +54,19 @@
       <text/>
     </element>
   </define>
+  <!-- Complex type of a non empty string  -->
   <define name="non_empty">
     <data type="string">
       <param name="minLength">1</param>
     </data>
   </define>
+  <!-- Complex type of a string in format of a dollar value with two decimals  -->
   <define name="dollars">
     <data type="string">
-      <param name="pattern">$\d{1,}.\d{2}</param>
+      <param name="pattern">$\d{1,}(,\d{3})*.\d{2}</param>
     </data>
   </define>
+  <!-- Complex type of an empty string  -->
   <define name="empty">
     <data type="string">
       <param name="maxLength">0</param>

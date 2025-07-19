@@ -1,3 +1,4 @@
+-- table for books and their metadata
 CREATE TABLE IF NOT EXISTS books (
     asin TEXT PRIMARY KEY,
     title TEXT,
@@ -5,7 +6,7 @@ CREATE TABLE IF NOT EXISTS books (
     price REAL,
     genre TEXT
 );
-
+-- enumerated table for review data corresponding to books
 CREATE TABLE IF NOT EXISTS reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     asin TEXT,
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     summary TEXT,
     FOREIGN KEY(asin) REFERENCES books(asin)
 );
-
+-- enumerated table for phrases and their polarities corresponding to a book review
 CREATE TABLE IF NOT EXISTS sentiments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     review_id INTEGER,
