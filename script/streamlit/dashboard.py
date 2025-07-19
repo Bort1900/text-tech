@@ -148,13 +148,17 @@ search_query_conditions = ""
 search_params = []
 if title_search:
     search_needed = True
-    title_query, title_param = get_fts_query("title", title_search.split())
+    title_query, title_param = get_fts_query(
+        "title", title_search.split(), conjunctive=True
+    )
     search_query_conditions += title_query
     search_params.append(title_param)
 
 if author_search:
     search_needed = True
-    author_query, author_param = get_fts_query("author", author_search.split())
+    author_query, author_param = get_fts_query(
+        "author", author_search.split(), conjunctive=True
+    )
     search_query_conditions += author_query
     search_params.append(author_param)
 
