@@ -4,6 +4,12 @@ from functools import partial
 import psycopg2
 from streamlit_tags import st_tags
 
+st.session_state["help"] = False
+help_text = (
+    "This is a dashboard for accessing the book review scope database which consists of review data written for books on amazon\n"
+    "In the 'Filter Results' section you can filter the reviews by "
+)
+
 
 @st.cache_data
 def get_data(query="SELECT * FROM books;", search_params=()):
@@ -136,7 +142,7 @@ if sentiment_choice:
     params += sentiment_choice
 
 
-complete_query = f"SELECT B.title, B.genre, R.rating, R.summary, S.phrase, S.polarity, B.price FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
+complete_query = f"SELECT B.title, B.genre, R.rating, S.phrase, S.polarity, B.price, R.review_text, R.summary,FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
     st.write(complete_query, params)
