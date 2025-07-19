@@ -48,7 +48,7 @@ def get_fts_query(column, words, conjunctive=False):
     """
     returns query and parameter for a full text search with disjunction
     """
-    condition = f"AND {column}::tsvector @@ %s::tsquery "
+    condition = f"AND to_tsvector('simple', {column}) @@ %s::tsquery "
     param = ""
     for i, word in enumerate(words):
         if i > 0:
@@ -161,7 +161,7 @@ if author_search:
 search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_conditions}ORDER BY asin"
 
 if search_needed:
-    # books = get_data(query=search_query, search_params=search_params)
+    books = get_data(query=search_query, search_params=search_params)
     with search_results:
         st.write(search_query, search_params)
-        # st.dataframe(books)
+        st.dataframe(books)
