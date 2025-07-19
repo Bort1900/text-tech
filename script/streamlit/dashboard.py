@@ -38,7 +38,8 @@ def get_disjunction_query(column, element):
     conditions = f"AND {column} IN ("
     for i in range(len(element)):
         if i > 0:
-            conditions += "%s"
+            conditions += ", "
+        conditions += "%s"
     conditions += ") "
     return conditions
 
