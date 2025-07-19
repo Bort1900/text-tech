@@ -165,7 +165,7 @@ if sentiment_choice:
     params += sentiment_choice
 
 # query selecting the columns and joining the three tables adding all the filter restrictions taking the first 1000 results
-complete_query = f"SELECT B.asin, B.title, B.author, S.phrase, R.rating, S.phrase, S.polarity, B.genre, B.price, R.review_text, R.summary FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
+complete_query = f"SELECT B.asin, B.title, B.author, S.phrase, R.rating, S.polarity, B.genre, B.price, R.review_text, R.summary FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 # displaying the filtered data
 filtered = get_data(query=complete_query, search_params=params)
 num_results = filtered.shape[0]
