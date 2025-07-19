@@ -164,11 +164,16 @@ if sentiment_choice:
     query_conditions += get_disjunction_query("S.polarity", sentiment_choice)
     params += sentiment_choice
 
-# query selecting the columns and joining the three tables adding all the filter restrictions
+# query selecting the columns and joining the three tables adding all the filter restrictions taking the first 1000 results
 complete_query = f"SELECT B.title, B.genre, R.rating, S.phrase, S.polarity, B.price, R.review_text, R.summary FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 # displaying the filtered data
 filtered = get_data(query=complete_query, search_params=params)
+num_results = filtered.shape[0]
 with filtered_results:
+    if num_results == 1000:
+        st.write("More than 1000 results")
+    else:
+        st.write(f"{num_results}results found")
     st.dataframe(filtered.style.format({"price": "${:,.2f}", "rating": "{:,.0f}"}))
 
 
