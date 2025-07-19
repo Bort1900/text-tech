@@ -70,8 +70,8 @@ with col2:
         text="Press enter to add more",
     )
 with col3:
-    toggle_conjunctive = st.toggle("conjuntive", label_visibility="hidden")
     st.markdown("Conjunctive" if toggle_conjunctive else "Disjunctive")
+    toggle_conjunctive = st.toggle("conjuntive", label_visibility="hidden")
 col4, col5, col6 = st.columns([2, 3, 3])
 with col4:
     rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
@@ -159,7 +159,7 @@ if author_search:
 search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_conditions}ORDER BY asin"
 
 if search_needed:
-    books = get_data(query=search_query, search_params=search_params)
+    #books = get_data(query=search_query, search_params=search_params)
     with search_results:
         st.write(search_query, search_params)
-        st.dataframe(books)
+        #st.dataframe(books)
