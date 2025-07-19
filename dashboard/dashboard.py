@@ -33,7 +33,7 @@ def get_genres():
 
 def get_disjunction_query(column, element):
     """
-    returns query for a disjunction
+    returns query for a matching a disjunction
     """
     conditions = f"AND {column} IN ("
     for i in range(len(element)):
@@ -132,22 +132,27 @@ search_results = st.container()
 query_conditions = ""
 params = []
 if asin_choice:
+    # filtering for asin match
     query_conditions += "AND B.asin=%s "
     params.append(asin_choice)
 
 if rating_choice:
+    # filtering for rating range
     query_conditions += "AND R.rating BETWEEN %s AND %s "
     params.extend(list(rating_choice))
 
 if price_choice:
+    # filtering for price range
     query_conditions += "AND B.price BETWEEN %s AND %s "
     params.extend(list(price_choice))
 
 if genre_choice:
+    # filtering for at least one of the selected genres
     query_conditions += get_disjunction_query("B.genre", genre_choice)
     params.extend(genre_choice)
 
 if keyword_choice:
+    # full text search for at least one or all the keywords inside a review depending on the conjunction toggle
     keyword_query, keyword_param = get_fts_query(
         "S.phrase", keyword_choice, conjunctive=toggle_conjunctive
     )
@@ -155,20 +160,24 @@ if keyword_choice:
     params.append(keyword_param)
 
 if sentiment_choice:
+    # filtering for at least one of the selected polarities
     query_conditions += get_disjunction_query("S.polarity", sentiment_choice)
     params += sentiment_choice
 
-
+# query selecting the columns and joining the three tables adding all the filter restrictions
 complete_query = f"SELECT B.title, B.genre, R.rating, S.phrase, S.polarity, B.price, R.review_text, R.summary FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
+# displaying the filtered data
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
     st.dataframe(filtered.style.format({"price": "${:,.2f}", "rating": "{:,.0f}"}))
+
 
 # search for books and return the asin
 search_needed = False
 search_query_conditions = ""
 search_params = []
 if title_search:
+    # full text search for book title with all the search terms
     search_needed = True
     title_query, title_param = get_fts_query(
         "title", title_search.split(), conjunctive=True
@@ -177,6 +186,7 @@ if title_search:
     search_params.append(title_param)
 
 if author_search:
+    # full text search for book author with all the search terms
     search_needed = True
     author_query, author_param = get_fts_query(
         "author", author_search.split(), conjunctive=True
@@ -184,8 +194,10 @@ if author_search:
     search_query_conditions += author_query
     search_params.append(author_param)
 
+# query restricting the books table as specified by full text queries
 search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_conditions}ORDER BY asin"
 
+# display data if search was used
 if search_needed:
     books = get_data(query=search_query, search_params=search_params)
     with search_results:
