@@ -160,7 +160,6 @@ if sentiment_choice:
 complete_query = f"SELECT B.title, B.genre, R.rating, S.phrase, S.polarity, B.price, R.review_text, R.summary FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
-    st.write(complete_query, params)
     st.dataframe(filtered.style.format({"price": "${:,.2f}", "rating": "{:,.0f}"}))
 
 # search for books and return the asin
@@ -188,5 +187,4 @@ search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_c
 if search_needed:
     books = get_data(query=search_query, search_params=search_params)
     with search_results:
-        st.write(search_query, search_params)
         st.dataframe(books)
