@@ -4,24 +4,6 @@ from functools import partial
 import psycopg2
 from streamlit_tags import st_tags
 
-# show help text
-text, button = st.columns([7, 1])
-help_text = (
-    "This is a dashboard for accessing the book review scope database which consists of review data written for books on amazon\n"
-    "In the 'Filter Results' section you can filter the reviews by asin(amazon article ID), User rating, Polarity of a review sentence, Price, Genre and keywords in a review sentence.\n"
-    "In the 'Book Search' section you can full text search for books by author and/or title e.g. to retrieve the asin."
-)
-with button:
-    help_button = st.button("Show help")
-if help_button:
-    if "help" in st.session_state.keys():
-        st.session_state["help"] = not st.session_state["help"]
-    else:
-        st.session_state["help"] = True
-if st.session_state["help"]:
-    with text:
-        st.write(help_text)
-
 
 @st.cache_data
 def get_data(query="SELECT * FROM books;", search_params=()):
@@ -76,40 +58,59 @@ def get_fts_query(column, words, conjunctive=False):
 
 
 st.title("Book Reviewscope - Amazon Reviews")
+# show help text
+text, button = st.columns([7, 3])
+help_text = (
+    "This is a dashboard for accessing the book review scope database which consists of review data written for books on amazon\n"
+    "In the 'Filter Results' section you can filter the reviews by asin(amazon article ID), User rating, Polarity of a review sentence, Price, Genre and keywords in a review sentence.\n"
+    "In the 'Book Search' section you can full text search for books by author and/or title e.g. to retrieve the asin."
+)
+with button:
+    help_button = st.button("Show help")
+if help_button:
+    if "help" in st.session_state.keys():
+        st.session_state["help"] = not st.session_state["help"]
+    else:
+        st.session_state["help"] = True
+if st.session_state["help"]:
+    with text:
+        st.write(help_text)
+
 # Filter database with various parameters
 st.subheader("Filter results")
 # Filters
-col1, col2, col3 = st.columns([2, 3, 1])
+col1, col2 = st.columns([1, 1])
 with col1:
     asin_choice = st.text_input(
         "asin",
         help="Amazon standard identification number, can be retrieved via 'Book search'",
     )
 with col2:
-    keyword_choice = st_tags(
-        label="Keywords:",
-        text="Press enter to add more",
-    )
+    genre_choice = st.multiselect("Genres", get_genres())
+col3, col4, col5 = st.columns([2, 3, 3])
 with col3:
-    toggle_label = st.container()
-    toggle_conjunctive = st.toggle("conjuntive", label_visibility="hidden")
-    with toggle_label:
-        st.markdown("Conjunctive" if toggle_conjunctive else "Disjunctive")
-col4, col5, col6 = st.columns([2, 3, 3])
-with col4:
     rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
-with col5:
+with col4:
     sentiment_choice = st.segmented_control(
         "Review Polarity",
         options=["negative", "neutral", "positive"],
         selection_mode="multi",
     )
-with col6:
+with col5:
     price_choice = st.slider(
         "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
     )
-genre_choice = st.multiselect("Genres", get_genres())
-
+col6, col7 = st.columns([5, 1])
+with col6:
+    keyword_choice = st_tags(
+        label="Keywords:",
+        text="Press enter to add more",
+    )
+with col7:
+    toggle_label = st.container()
+    toggle_conjunctive = st.toggle("conjuntive", label_visibility="hidden")
+    with toggle_label:
+        st.markdown("Conjunctive" if toggle_conjunctive else "Disjunctive")
 
 filtered_results = st.container()
 # Searching for books in the database to get asin
