@@ -4,11 +4,23 @@ from functools import partial
 import psycopg2
 from streamlit_tags import st_tags
 
-st.session_state["help"] = False
+# show help text
+text, button = st.columns([7, 1])
 help_text = (
     "This is a dashboard for accessing the book review scope database which consists of review data written for books on amazon\n"
-    "In the 'Filter Results' section you can filter the reviews by "
+    "In the 'Filter Results' section you can filter the reviews by asin(amazon article ID), User rating, Polarity of a review sentence, Price, Genre and keywords in a review sentence.\n"
+    "In the 'Book Search' section you can full text search for books by author and/or title e.g. to retrieve the asin."
 )
+with button:
+    help_button = st.button("Show help")
+if help_button:
+    if "help" in st.session_state.keys():
+        st.session_state["help"] = not st.session_state["help"]
+    else:
+        st.session_state["help"] = True
+if st.session_state["help"]:
+    with text:
+        st.write(help_text)
 
 
 @st.cache_data
@@ -69,7 +81,10 @@ st.subheader("Filter results")
 # Filters
 col1, col2, col3 = st.columns([2, 3, 1])
 with col1:
-    asin_choice = st.text_input("asin")
+    asin_choice = st.text_input(
+        "asin",
+        help="Amazon standard identification number, can be retrieved via 'Book search'",
+    )
 with col2:
     keyword_choice = st_tags(
         label="Keywords:",
