@@ -43,6 +43,19 @@ def get_disjunction_query(column, element):
     return conditions
 
 
+def get_fts_query(column, words, conjunctive=False):
+    """
+    returns query and parameter for a full text search with disjunction
+    """
+    condition = f"AND {column}::tsvector @@ %s::tsquery "
+    param = ""
+    for i, word in enumerate(words):
+        if i > 0:
+            param += "&" if conjunctive else "|"
+        param += word
+    return condition, param
+
+
 st.title("Book Reviewscope - Amazon Reviews")
 # Filter database with various parameters
 st.subheader("Filter results")
@@ -105,13 +118,11 @@ if genre_choice:
     params.extend(genre_choice)
 
 if keyword_choice:
-    query_conditions += "AND S.phrase::tsvector @@ %s::tsquery "
-    keywords = ""
-    for i, word in enumerate(keyword_choice):
-        if i > 0:
-            keywords += "&" if toggle_conjunctive else "|"
-        keywords += word
-    params.append(keywords)
+    keyword_query, keyword_param = get_fts_query(
+        "S.phrase", keyword_choice, conjunctive=toggle_conjunctive
+    )
+    query_conditions += keyword_query
+    params.append(keyword_param)
 
 if sentiment_choice:
     query_conditions += get_disjunction_query("S.polarity", sentiment_choice)
@@ -124,22 +135,21 @@ with filtered_results:
     st.write(complete_query, params)
     st.dataframe(filtered.style.format({"price": "${:,.2f}", "rating": "{:,.0f}"}))
 
-# TODO full text search
 # search for books and return the asin
 search_needed = False
 search_query_conditions = ""
 search_params = []
 if title_search:
     search_needed = True
-    search_query_conditions += "AND title LIKE %s "
-    search_params.append(
-        f"%{title_search}%",
-    )
+    title_query, title_param = get_fts_query("title", title_search.split())
+    search_query_conditions += title_query
+    search_params.append(title_param)
 
 if author_search:
     search_needed = True
-    search_query_conditions += "AND author LIKE %s "
-    search_params = (f"%{author_search}%",)
+    author_query, author_param = get_fts_query("author", author_search.split())
+    search_query_conditions += author_query
+    search_params.append(author_param)
 
 search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_conditions}ORDER BY asin"
 
@@ -147,27 +157,3 @@ if search_needed:
     books = get_data(query=search_query, search_params=search_params)
     with search_results:
         st.dataframe(books)
-
-# # Kategorie-Filter
-# kategorien = df["kategorie"].dropna().unique()
-# kategorie_filter = st.multiselect("Kategorie auswählen", kategorien, default=kategorien)
-
-# # Preisbereich-Filter
-# min_preis = float(df["preis"].min())
-# max_preis = float(df["preis"].max())
-# preis_min, preis_max = st.slider(
-#     "Preisbereich",
-#     min_value=min_preis,
-#     max_value=max_preis,
-#     value=(min_preis, max_preis),
-# )
-
-# # Gefilterte Daten
-# df_filtered = df[
-#     (df["kategorie"].isin(kategorie_filter))
-#     & (df["preis"] >= preis_min)
-#     & (df["preis"] <= preis_max)
-# ]
-
-# st.subheader("Filtered Reviews")
-# st.dataframe(df_filtered)
