@@ -99,7 +99,7 @@ with col4:
     )
 with col5:
     price_choice = st.slider(
-        "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
+        "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 100)
     )
 col6, col7 = st.columns([5, 1])
 with col6:
@@ -173,7 +173,7 @@ with filtered_results:
     if num_results == 1000:
         st.write("More than 1000 results")
     else:
-        st.write(f"{num_results}results found")
+        st.write(f"{num_results} results found")
     st.dataframe(filtered.style.format({"price": "${:,.2f}", "rating": "{:,.0f}"}))
 
 
