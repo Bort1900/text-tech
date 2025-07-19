@@ -142,7 +142,7 @@ if sentiment_choice:
     params += sentiment_choice
 
 
-complete_query = f"SELECT B.title, B.genre, R.rating, S.phrase, S.polarity, B.price, R.review_text, R.summary,FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
+complete_query = f"SELECT B.title, B.genre, R.rating, S.phrase, S.polarity, B.price, R.review_text, R.summary FROM books as B, reviews as R, sentiments as S WHERE B.asin = R.asin AND R.id = S.review_id {query_conditions}ORDER BY B.asin LIMIT 1000"
 filtered = get_data(query=complete_query, search_params=params)
 with filtered_results:
     st.write(complete_query, params)
