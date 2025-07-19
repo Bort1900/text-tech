@@ -61,9 +61,9 @@ st.title("Book Reviewscope - Amazon Reviews")
 # show help text
 text, button = st.columns([7, 3])
 help_text = (
-    "This is a dashboard for accessing the book review scope database which consists of review data written for books on amazon\n"
-    "In the 'Filter Results' section you can filter the reviews by asin(amazon article ID), User rating, Polarity of a review sentence, Price, Genre and keywords in a review sentence.\n"
-    "In the 'Book Search' section you can full text search for books by author and/or title e.g. to retrieve the asin.\n"
+    "This is a dashboard for accessing the book review scope database which consists of review data written for books on amazon  "
+    "In the 'Filter Results' section you can filter the reviews by asin(amazon article ID), User rating, Polarity of a review sentence, Price, Genre and keywords in a review sentence.  "
+    "In the 'Book Search' section you can full text search for books by author and/or title e.g. to retrieve the asin.  "
     "For more information visit our [Github](https://github.com/Bort1900/text-tech)"
 )
 with button:
