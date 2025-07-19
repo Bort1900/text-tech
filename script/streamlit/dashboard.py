@@ -35,7 +35,7 @@ def get_disjunction_query(column, element):
     """
     returns query for a disjunction
     """
-    conditions += f"AND {column} IN ("
+    conditions = f"AND {column} IN ("
     for i in range(len(element)):
         if i > 0:
             conditions += "%s"
@@ -73,15 +73,15 @@ with col3:
 with col4:
     st.markdown("Conjunctive" if toggle_conjunctive else "Disjunctive")
 col5, col6, col7 = st.columns([2, 3, 3])
-with col4:
-    rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
 with col5:
+    rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
+with col6:
     sentiment_choice = st.segmented_control(
         "Review Polarity",
         options=["negative", "neutral", "positive"],
         selection_mode="multi",
     )
-with col6:
+with col7:
     price_choice = st.slider(
         "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
     )
