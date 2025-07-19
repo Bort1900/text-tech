@@ -68,11 +68,11 @@ help_text = (
 )
 with button:
     help_button = st.button("Show help")
+if not "help" in st.session_state.keys():
+    st.session_state["help"] = False
 if help_button:
-    if "help" in st.session_state.keys():
-        st.session_state["help"] = not st.session_state["help"]
-    else:
-        st.session_state["help"] = True
+    st.session_state["help"] = not st.session_state["help"]
+
 if st.session_state["help"]:
     with text:
         st.markdown(help_text)
