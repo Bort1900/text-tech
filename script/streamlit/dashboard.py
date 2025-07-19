@@ -161,4 +161,5 @@ search_query = f"SELECT asin, title, author FROM books WHERE 1=1 {search_query_c
 if search_needed:
     books = get_data(query=search_query, search_params=search_params)
     with search_results:
+        st.write(search_query, search_params)
         st.dataframe(books)
