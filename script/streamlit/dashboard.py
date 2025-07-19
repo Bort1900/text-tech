@@ -61,7 +61,7 @@ st.title("Book Reviewscope - Amazon Reviews")
 # Filter database with various parameters
 st.subheader("Filter results")
 # Filters
-col1, col2, col3, col4 = st.columns([2, 3, 3, 1])
+col1, col2, col3 = st.columns([2, 3, 1])
 with col1:
     asin_choice = st.text_input("asin")
 with col2:
@@ -71,18 +71,17 @@ with col2:
     )
 with col3:
     toggle_conjunctive = st.toggle("conjuntive", label_visibility="hidden")
-with col4:
     st.markdown("Conjunctive" if toggle_conjunctive else "Disjunctive")
-col5, col6, col7 = st.columns([2, 3, 3])
-with col5:
+col4, col5, col6 = st.columns([2, 3, 3])
+with col4:
     rating_choice = st.slider("Rating", min_value=1, max_value=5, value=(1, 5))
-with col6:
+with col5:
     sentiment_choice = st.segmented_control(
         "Review Polarity",
         options=["negative", "neutral", "positive"],
         selection_mode="multi",
     )
-with col7:
+with col6:
     price_choice = st.slider(
         "Price", min_value=0, max_value=100, format="%0.2f", value=(1, 10)
     )
